@@ -19,5 +19,6 @@ venv/
 .idea/
 
 # OS
+*.db
 .DS_Store
 Thumbs.db
