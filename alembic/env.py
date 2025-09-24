@@ -30,6 +30,8 @@ target_metadata = None
 #I added this. 
 from app.repository.database import Base
 from app.model import user, file, file_shares, logs  # import all models
+from app.config import settings  # ensure settings are loaded
+from app.repository.database import Base 
 
 target_metadata = Base.metadata
 #End of addition.
