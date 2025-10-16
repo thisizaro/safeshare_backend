@@ -1,0 +1,67 @@
+# [Testing purposes] Docker Compose file for PostgreSQL and pgAdmin
+
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:14
+    container_name: safeshare-postgres
+    environment:
+      POSTGRES_USER: aro
+      POSTGRES_PASSWORD: 2004
+      POSTGRES_DB: safeshare_db
+    ports:
+      - "5432:5432"
+    volumes:
+      # This keeps your database persistent [check learning docs for details]
+      - postgres-data:/var/lib/postgresql/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U aro"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: safeshare-pgadmin
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PGADMIN_DEFAULT_EMAIL: aro@example.com
+      PGADMIN_DEFAULT_PASSWORD: 2004
+    ports:
+      - "8080:80"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+
+    networks:
+      - safeshare_net
+
+  minio:
+    image: minio/minio:latest
+    container_name: safeshare-minio
+    restart: always
+    ports:
+      - "9000:9000" # API port
+      - "9001:9001" # Console port
+    environment:
+      MINIO_ROOT_USER: minioadmin # Change this in production
+      MINIO_ROOT_PASSWORD: minioadmin123 # Change this in production
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio-data:/data
+
+    networks:
+      - safeshare_net
+
+volumes:
+  postgres-data:
+  pgadmin-data:
+  minio-data:
+    driver: local
+
+networks:
+  safeshare_net:
+    driver: bridge

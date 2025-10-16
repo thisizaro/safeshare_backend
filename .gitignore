@@ -22,3 +22,7 @@ venv/
 *.db
 .DS_Store
 Thumbs.db
+
+# MinIO
+minio_data/
+learning/

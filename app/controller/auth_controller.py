@@ -5,15 +5,10 @@ from app.service.auth_service import hash_password, verify_password, create_acce
 from app.model.user import User
 from app.model.schemas import UserCreate, UserLogin, Token
 
-router = APIRouter(prefix="/auth", tags=["auth"])
+# dependency
+from app.repository.database import get_db
 
-# Dependency
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+router = APIRouter(prefix="/auth", tags=["auth"])
 
 @router.post("/register", response_model=Token)
 def register(user_data: UserCreate, db: Session = Depends(get_db)):
