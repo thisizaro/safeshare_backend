@@ -43,7 +43,7 @@ class S3ClientWrapper:
     def upload_fileobj(self, file_obj, key: str, content_type: Optional[str] = None):
         """
         Uploads a file-like object to the configured bucket.
-        file_obj: file-like object (must be binary, and pointer at start)
+        file_obj: file-like object (must be binary, anzd pointer at start)
         key: object key in bucket
         """
         extra = {}
